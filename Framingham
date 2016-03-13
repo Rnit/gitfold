@@ -1,0 +1,22 @@
+# FRAMINGHAM HEART STUDY #
+
+framingham <- read.csv("framingham.csv")
+summary(framingham)
+str(framingham)
+library(caTools)
+set.seed(1000)
+split <- sample.split(framingham$TenYearCHD, SplitRatio = 0.65)
+train <- subset(framingham, split==TRUE)
+test <- subset(framingham, split==FALSE)
+nrow(train)
+nrow(test)
+framinghamLog <- glm(TenYearCHD ~ . , data = train, family = binomial)
+#                                ^ here period(.)is as This will use all of the other variables in the data set as independent variables and is used in place of listing out all of the independent variables' names separated by the plus sign. Be careful doing this with data sets that have identifying variables like a patient ID or name since you wouldn't want to use these as independent variables.#
+summary(framinghamLog)
+predictTest <- predict(framinghamLog, type = "response", newdata = test)
+table(test$TenYearCHD, predictTest > 0.5)
+library(ROCR)
+ROCRpred <- prediction(predictTest, test$TenYearCHD)
+          # ^ fnctn uses  first argument our predictions, predictTest, and then as a second argument the trueoutcome,i.e test$TenYearCHD#
+auc <- as.numeric(performance(ROCRpred,"auc")@y.values)
+auc# area under curve value#
