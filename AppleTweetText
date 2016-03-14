@@ -1,0 +1,85 @@
+summary(tweets)
+str(tweets)
+
+tweets$Negative <- as.factor(tweets$Avg<= -1)# tweets whose avg is equal or below -1#
+table(tweets$Negative)
+
+library(tm)#used for text mining#
+library(SnowballC)# it help us using tm package
+
+
+corpus <- Corpus(VectorSource(tweets$Tweet))
+corpus[[1]]# to check the 1st tweet
+#however it shows result as <<PlainTextDocument>>
+#Metadata:  7
+#Content:  chars: 101
+#use:  corpus[[1]]$content
+#it will show the tweet content#
+
+corpus <- tm_map(corpus, tolower)
+corpus[[1]]
+corpus <- tm_map(corpus, removePunctuation)# to remove punctuation
+corpus[[1]]
+
+stopwords("english")[1:12]#stopwords fnctn in R consist of list of 
+#stopwords, here we are checking stopwords that are in english & from 1 to 12#
+
+corpus <- tm_map(corpus, removeWords, c("apple", stopwords("english")))
+#here we removed word "apple" as it is repeats in every tweet so we dont need it#
+corpus[[1]]
+
+corpus <- tm_map(corpus, stemDocument)#stemming our document#
+corpus <- tm_map(corpus, PlainTextDocument)#it converts all documents in the corpus to the PlainTextDocument type
+corpus[[1]]$content
+
+
+#The tm package provides a function called
+#DocumentTermMatrix that generates a matrix where
+#the rows correspond to documents, in our case tweets,
+#and the columns correspond to words in those tweets.
+#The values in the matrix are the number
+#of times that word appears in each document.#
+
+frequencies <- DocumentTermMatrix(corpus)
+frequencies
+inspect(frequencies[1000:1005, 505:515])#to look what matrix frequencies look like#
+
+findFreqTerms(frequencies, lowfreq = 20)#We can look at what the most popular terms are,
+#or words, with the function findFreqTerms#
+ sparse <- removeSparseTerms(frequencies,0.995)#The sparsity threshold works as follows.
+# If we say 0.98, this means to only keep
+# terms that appear in 2% or more of the tweets.
+# If we say 0.99, that means to only keep
+# terms that appear in 1% or more of the tweets.
+# If we say 0.995, that means to only keep
+# terms that appear in 0.5% or more of the tweets#
+ sparse
+ tweetsSparse <- as.data.frame(as.matrix(sparse))
+ colnames(tweetsSparse)<- make.names(colnames(tweetsSparse))
+ 
+ 
+ tweetsSparse$Negative <- tweets$Negative
+ 
+ library(caTools)
+ split <- sample.split(tweetsSparse$Negative, SplitRatio = 0.7)
+ trainSparse <- subset(tweetsSparse, split==T)
+ testSparse <- subset(tweetsSparse, split==F)
+ 
+ library(rpart)
+ library(rpart.plot)
+ tweetCART <- rpart(Negative~., data = trainSparse, method = "class")#to predict Negative using all of the other variables
+
+ prp(tweetCART)
+ 
+ predictCART <- predict(tweetCART, newdata = testSparse, type = "class")
+ table(testSparse$Negative, predictCART)#confusion matrix
+ (294+18)/(294+6+37+18)#accuracy
+ table(testSparse$Negative)
+ 
+ #now how random forest will do
+ library(randomForest)
+ tweetRF <- randomForest(Negative~., data = trainSparse)
+ predictRF <- predict(tweetRF, newdata = testSparse)
+ table(testSparse$Negative, predictRF)#confusion matrix
+ (291+21)/(291+9+34+21)
+ 
