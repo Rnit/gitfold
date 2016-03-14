@@ -1,15 +1,15 @@
 # FRAMINGHAM HEART STUDY #
 
-```summary(framingham)```
-```str(framingham)```
+summary(framingham)
+str(framingham)
 library(caTools)
-set.seed(1000)
+
 split <- sample.split(framingham$TenYearCHD, SplitRatio = 0.65)
 train <- subset(framingham, split==TRUE)
 test <- subset(framingham, split==FALSE)
-```nrow(train)
+nrow(train)
 nrow(test)
-framinghamLog <- glm(TenYearCHD ~ . , data = train, family = binomial)```
+framinghamLog <- glm(TenYearCHD ~ . , data = train, family = binomial)
 
 summary(framinghamLog)
 predictTest <- predict(framinghamLog, type = "response", newdata = test)
