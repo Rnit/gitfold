@@ -39,7 +39,7 @@ points(boston$LON[boston$MEDV>=21.20], boston$LAT[boston$MEDV>=21.20], col="blue
 
 
 library(caTools)
-set.seed(123)
+
 split <- sample.split(boston$MEDV, SplitRatio = 0.7)
 train <- subset(boston, split==T)
 test <- subset(boston, split==F)
@@ -58,7 +58,7 @@ library(caret)
 library(e1071)
 trainCNTRL <- trainControl(method = "cv", number = 10)
 cpGRID <- expand.grid(.cp= (0:10)*0.001)
-tr <- train(MEDV ~ +LAT+LON+CRIM+ZN+INDUS+CHAS+NOX+RM+AGE+DIS+RAD+TAX+PTRATIO, data=train, method= "rpart", trControl= trainCNTRL, tuneGrid= cpGRID)
+> tr <- train(MEDV ~ +LAT+LON+CRIM+ZN+INDUS+CHAS+NOX+RM+AGE+DIS+RAD+TAX+PTRATIO, data=train, method= "rpart", trControl= trainCNTRL, tuneGrid= cpGRID)
 tr
 bestTREE <- tr$finalModel
 prp(bestTREE)
