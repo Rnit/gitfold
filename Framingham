@@ -18,4 +18,4 @@ library(ROCR)
 ROCRpred <- prediction(predictTest, test$TenYearCHD)
 
 auc <- as.numeric(performance(ROCRpred,"auc")@y.values)
-auc# area under curve value#
+auc #area under curve value#
