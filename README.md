@@ -24,3 +24,4 @@ Using data *this data comes from* [UCI Machine Learning Repository](http://archi
 # TWITTER APPLE -VE SENTIMENTS #
 
 While **Apple** has a large number of fans, they also have a large number of people who don't like their products.
+**FYI** >*some part of the code is hidden as it contain personal info.*
