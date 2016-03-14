@@ -14,3 +14,9 @@ test results.
 Exams and questions expanded over time, but the key in the study was that the trajectory
 of the health of the patients was followed during their entire lifespan.
 In this code I built models using the Framingham data ( THIS DATA COMES FROM BioLINCC WEBSITE ) to predict and prevent heart disease.
+
+
+# BOSTON HOUSING PRICES PREDICTION #
+
+Boston is the capital of the state of Massachusetts, USA. It was first settled in 1630, and in the greater Boston area there are about 5 million people. The area features some of the highest population densities in America.
+Using data (this data comes from the UCI Machine Learning Repository) predicting boston housing prices using Regression Trees.
