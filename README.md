@@ -13,4 +13,4 @@ test results.
 
 Exams and questions expanded over time, but the key in the study was that the trajectory
 of the health of the patients was followed during their entire lifespan.
-In this code I built models using the Framingham data to predict and prevent heart disease.
+In this code I built models using the Framingham data ( THIS DATA COMES FROM BioLINCC WEBSITE ) to predict and prevent heart disease.
