@@ -21,7 +21,7 @@ In this code I built models using the Framingham data *this data comes from* [Bi
 **Boston** is the capital of the state of Massachusetts, USA. It was first settled in 1630, and in the greater Boston area there are about 5 million people. The area features some of the highest population densities in America.
 Using data *this data comes from* [UCI Machine Learning Repository](http://archive.ics.uci.edu/ml/datasets/Housing) predicting boston housing prices using **Regression Trees**.
 
-# TWITTER APPLE -VE SENTIMENTS #
+# PREDICTING TWITTER APPLE -VE SENTIMENTS #
 
 While **Apple** has a large number of fans, they also have a large number of people who don't like their products.
 **FYI** >*some part of the code is hidden as it contain personal info.*
