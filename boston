@@ -1,0 +1,67 @@
+#BOSTON HOUSING PRICES#
+
+summary(boston)
+str(boston)
+plot(boston$LON, boston$LAT)
+points(boston$LON[boston$CHAS==1], boston$LAT[boston$CHAS==1], col="blue", pch=19)
+points(boston$LON[boston$TRACT==3531], boston$LAT[boston$TRACT==3531], col="red", pch=19)
+summary(boston$NOX)
+points(boston$LON[boston$NOX>=0.55], boston$LAT[boston$NOX>=0.55], col="green", pch=19)
+plot(boston$LON, boston$LAT)
+summary(boston$MEDV)
+points(boston$LON[boston$MEDV>=21.20], boston$LAT[boston$MEDV>=21.20], col="blue", pch=19)
+
+latlonLM <- lm(MEDV ~ LAT+LON, data = boston)
+summary(latlonLM)
+plot(boston$LON, boston$LAT)
+points(boston$LON[boston$MEDV>=21.20], boston$LAT[boston$MEDV>=21.20], col="blue", pch=19)
+ls(latlonLM)
+latlonLM$fitted.values
+points(boston$LON[latlonLM$fitted.values>=21.20], boston$LAT[latlonLM$fitted.values>=21.20], col="red", pch=13)
+
+
+library(rpart)
+library(rpart.plot)
+latlonTREE <- rpart(MEDV~ LAT+LON, data = boston)
+prp(latlonTREE)
+plot(boston$LON, boston$LAT)
+points(boston$LON[boston$MEDV>=21.20], boston$LAT[boston$MEDV>=21.20], col="blue", pch=19)
+fitvalues <- predict(latlonTREE)
+points(boston$LON[fitvalues>=21.2], boston$LAT[fitvalues>=21.2], col="red", pch=8)
+latlonTREE <- rpart(MEDV~ LAT+LON, data = boston, minbucket=50)
+plot(latlonTREE)
+text(latlonTREE)
+plot(boston$LON, boston$LAT)
+abline(v=-71.07)#to make vertical line i.e v and h for horizontal
+abline(h=42.21)
+abline(h=42.17)
+points(boston$LON[boston$MEDV>=21.20], boston$LAT[boston$MEDV>=21.20], col="blue", pch=19)
+
+
+library(caTools)
+set.seed(123)
+split <- sample.split(boston$MEDV, SplitRatio = 0.7)
+train <- subset(boston, split==T)
+test <- subset(boston, split==F)
+linreg <- lm(MEDV ~ LON+LAT+CRIM+ZN+INDUS+CHAS+NOX+RM+AGE+DIS+RAD+TAX+PTRATIO, data = train)
+summary(linreg)
+linregPred <- predict(linreg, newdata = test)
+linregSSE <- sum((linregPred - test$MEDV)^2)
+linregSSE
+tree <- rpart(MEDV ~ LON+LAT+CRIM+ZN+INDUS+CHAS+NOX+RM+AGE+DIS+RAD+TAX+PTRATIO, data = train)
+prp(tree)
+treePred <- predict(tree, newdata = test)
+treeSSE <- sum(treePred - test$MEDV)^2
+treeSSE
+
+library(caret)
+library(e1071)
+trainCNTRL <- trainControl(method = "cv", number = 10)
+cpGRID <- expand.grid(.cp= (0:10)*0.001)
+tr <- train(MEDV ~ +LAT+LON+CRIM+ZN+INDUS+CHAS+NOX+RM+AGE+DIS+RAD+TAX+PTRATIO, data=train, method= "rpart", trControl= trainCNTRL, tuneGrid= cpGRID)
+tr
+bestTREE <- tr$finalModel
+prp(bestTREE)
+bestTREEpred <- predict(bestTREE, newdata= test)
+bestTREEsse <- sum(bestTREEpred - test$MEDV)^2
+bestTREEsse
